@@ -10,6 +10,9 @@ class TodoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TodoController todoController = Get.put(TodoController());
     TextEditingController textEditingController = TextEditingController();
+    TextEditingController textupdatingController =
+        TextEditingController(text: '');
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromRGBO(99, 201, 254, 1),
@@ -151,6 +154,85 @@ class TodoScreen extends StatelessWidget {
                         ),
                         onLongPress: () {
                           todoController.todos.removeAt(index);
+                        },
+                        onTap: () {
+                          textupdatingController.text =
+                              todoController.todos[index].text.toString();
+                          showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(25),
+                                          topRight: Radius.circular(25))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 36),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            "Update Task",
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w700,
+                                                color: Color.fromRGBO(
+                                                    99, 201, 254, 1)),
+                                          ),
+                                        ),
+                                        TextField(
+                                          controller: textupdatingController,
+                                          autofocus: true,
+                                          decoration: InputDecoration(
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      99, 201, 254, 1)),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  width: 3,
+                                                  color: Color.fromRGBO(
+                                                      99, 201, 254, 1)),
+                                            ),
+                                            border: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      99, 201, 254, 1)),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 18,
+                                        ),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color.fromRGBO(
+                                                      99, 201, 254, 1)),
+                                              onPressed: () {
+                                                var updated =
+                                                    todoController.todos[index];
+                                                updated.text =
+                                                    textupdatingController.text;
+                                                todoController.todos[index] =
+                                                    updated;
+
+                                                Get.back();
+                                              },
+                                              child: Text("Update")),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
                         },
                         trailing: Checkbox(
                           value: todoController.todos[index].done,
