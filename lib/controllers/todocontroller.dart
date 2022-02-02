@@ -7,14 +7,14 @@ class TodoController extends GetxController {
 
   @override
   void onInit() {
-    // List storedtodos = GetStorage().read<List>('todos') ?? [];
-
-    // if (storedtodos.length != 0) {
-    //   todos = storedtodos.map((e) => Todo.formJSON(e)).toList().obs;
-    // }
-    // ever(todos, (c) {
-    //   GetStorage().write('todos', todos.toList());
-    // });
+    GetStorage().writeIfNull('todos', []);
+    List storedtodos = GetStorage().read<List>('todos') ?? [];
+    if (storedtodos.length != 0) {
+      todos = storedtodos.map((e) => Todo.formJson(e)).toList().obs;
+    }
+    ever(todos, (c) {
+      GetStorage().write('todos', todos.toList());
+    });
     super.onInit();
   }
 }
